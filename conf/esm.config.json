@@ -2,42 +2,34 @@
     "esm": {
         "version": "2.5",
         "website": "http://www.ezservermonitor.com",
-        "check_updates": true,
-        "auto_refresh": 0,
-        "theme": "blue",
-        "custom_title": ""
+        "check_updates": false,
+        "auto_refresh": 15,
+        "theme": "light",
+        "custom_title": "OPW Zarafa Dashboard"
     },
     "cpu": {
-        "enable_temperature": true
-    },
-    "disk": {
-        "show_tmpfs": false,
-        "show_filesystem": true
-    },
-    "ping": {
-        "hosts": [
-            "facebook.com",
-            "google.com",
-            "yahoo.com"
-        ]
-    },
-    "last_login": {
-        "enable": true,
-        "max": 5
+                "enable": false,
+        "enable_temperature": false
     },
     "services": {
         "show_port": true,
         "list": [
             {
-                "name": "Web Server",
+                "name": "Database Server",
                 "host": "localhost",
-                "port": 80,
+                "port": 3306,
+                "protocol": "tcp"
+            },      
+            {
+                "name": "Zarafa Server",
+                "host": "localhost",
+                "port": 236,
                 "protocol": "tcp"
             },
             {
                 "name": "Email Server (incoming)",
                 "host": "localhost",
-                "port": 993,
+                "port": 25,
                 "protocol": "tcp"
             },
             {
@@ -47,23 +39,44 @@
                 "protocol": "tcp"
             },
             {
-                "name": "FTP Server",
-                "host": "localhost",
-                "port": 21,
+                "name": "Zarafa Web",
+                "host": "10.200.200.25",
+                "port": 443,
                 "protocol": "tcp"
             },
             {
-                "name": "Database Server",
-                "host": "localhost",
-                "port": 3306,
+                "name": "Zarafa Activesync",
+                "host": "10.200.200.30",
+                "port": 443,
                 "protocol": "tcp"
             },
             {
-                "name": "SSH",
-                "host": "localhost",
-                "port": 22,
+                "name": "Zarafa IMAP",
+                "host": "10.200.200.25",
+                "port": 443,
+                "protocol": "tcp"
+            },
+            {
+                "name": "Zarafa CalDAV",
+                "host": "zarafa-caldav",
+                "port": 8443,
                 "protocol": "tcp"
             }
+
         ]
+    },
+    "disk": {
+        "show_tmpfs": false,
+        "show_filesystem": false
+    },
+    "ping": {
+        "hosts": [
+            "mail.i.opw.ie",
+            "activesync.opw.ie"
+        ]
+    },
+    "last_login": {
+        "enable": false,
+        "max": 5
     }
 }
