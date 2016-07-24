@@ -1,5 +1,4 @@
 <?php
-
 class Misc
 {
     /**
@@ -12,7 +11,6 @@ class Misc
     public static function getSize($filesize, $precision = 2)
     {
         $units = array('', 'K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y');
-
         foreach ($units as $idUnit => $unit)
         {
             if ($filesize > 1024)
@@ -50,14 +48,10 @@ class Misc
                 $num_cores = 1;
             }
         }
-
         if ((int)$num_cores <= 0)
             $num_cores = 1;
-
         return (int)$num_cores;
     }
-
-
     /**
      * Returns server IP
      *
@@ -67,8 +61,6 @@ class Misc
     {
         return $_SERVER['SERVER_ADDR'];
     }
-
-
     /**
      * Seconds to human readable text
      * Eg: for 36545627 seconds => 1 year, 57 days, 23 hours and 33 minutes
@@ -108,8 +100,6 @@ class Misc
         else
             return join(', ', $parts).' and '.$last;
     }
-
-
     /**
      * Returns a command that exists in the system among $cmds
      *
@@ -121,7 +111,6 @@ class Misc
     public static function whichCommand($cmds, $args = '', $returnWithArgs = true)
     {
         $return = '';
-
         foreach ($cmds as $cmd)
         {
             if (trim(shell_exec($cmd.$args)) != '')
@@ -130,15 +119,11 @@ class Misc
                 
                 if ($returnWithArgs)
                     $return .= $args;
-
                 break;
             }
         }
-
         return $return;
     }
-
-
     /**
      * Allows to pluralize a word based on a number
      * Ex : echo 'mot'.Misc::pluralize(5); ==> prints mots
@@ -154,8 +139,6 @@ class Misc
     {
         return $nb > 1 ? $plural : $singular;
     }
-
-
     /**
      * Checks if a port is open (TCP or UPD)
      *
@@ -170,7 +153,6 @@ class Misc
         if ($protocol == 'tcp')
         {
             $handle = @fsockopen($host, $port, $errno, $errstr, $timeout);
-
             if (!$handle)
             {
                 return false;
@@ -184,27 +166,125 @@ class Misc
         elseif ($protocol == 'udp')
         {
             $handle = @fsockopen('udp://'.$host, $port, $errno, $errstr, $timeout);
-
             socket_set_timeout($handle, $timeout);
-
             $write = fwrite($handle, 'x00');
-
             $startTime = time();
-
             $header = fread($handle, 1);
-
             $endTime = time();
-
             $timeDiff = $endTime - $startTime; 
             
             fclose($handle);
-
             if ($timeDiff >= $timeout)
                 return true;
             else
                 return false;
         }
-
         return false;
     }
+    /**
+     * Returns Operating System
+     *
+     * @return  string  Operating System
+     */
+    public static function getOS()
+    {
+        // OS
+        if (!($os = shell_exec('/usr/bin/lsb_release -ds | cut -d= -f2 | tr -d \'"\'')))
+        {
+            if (!($os = shell_exec('cat /etc/system-release | cut -d= -f2 | tr -d \'"\'')))
+            {
+                if (!($os = shell_exec('cat /etc/os-release | grep PRETTY_NAME | tail -n 1 | cut -d= -f2 | tr -d \'"\'')))
+                {
+                    if (!($os = shell_exec('find /etc/*-release -type f -exec cat {} \; | grep PRETTY_NAME | tail -n 1 | cut -d= -f2 | tr -d \'"\'')))
+                    {
+                        $os = 'N.A';
+                    }
+                }
+            }
+        }
+        $os = trim($os, '"');
+        return str_replace("\n", '', $os);
+    }
+    /**
+     * Returns Release name (Kernel version)
+     *
+     * @return  string  Release name
+     */
+    public static function getRelease()
+    {
+        return php_uname('r');
+    }
+    /**
+     * Returns Version information
+     *
+     * @return  string  Version information
+     */
+    public static function getVersion()
+    {
+        return php_uname('v');
+    }
+    /**
+     * Returns Machine type
+     *
+     * @return  string  Machine type
+     */
+    public static function getMachineType()
+    {
+        return php_uname('m');
+    }
+    /**
+     * Returns Server Uptime
+     *
+     * @return  string  Server Uptime
+     */
+    public static function getUpTime()
+    {
+        if (!($totalSeconds = shell_exec('/usr/bin/cut -d. -f1 /proc/uptime')))
+            $uptime = 'N.A';
+        else
+            $uptime = Misc::getHumanTime($totalSeconds);
+        return $uptime;
+    }
+    /**
+     * Returns Server Last Boot Time
+     *
+     * @return  string  Server Last Boot Time
+     */
+    public static function getBootTime()
+    {
+        if (!($upt_tmp = shell_exec('cat /proc/uptime')))
+            $last_boot = 'N.A';
+        else
+            $last_boot = date('Y-m-d H:i:s', time() - intval(explode(' ', $upt_tmp)[0]));
+        return $last_boot;
+    }
+    /**
+     * Returns Server Current Users
+     *
+     * @return  string  Current Users
+     */
+    public static function getCurrentUsers()
+    {
+        if (!($current_users = shell_exec('who -u | wc -l')))
+            $current_users = 'N.A';
+        return $current_users;
+    }
+    /**
+     * Returns Server Current Date
+     *
+     * @return  string  Current Date
+     */
+    public static function getCurrentDate()
+    {
+        if (!($server_date = shell_exec('/bin/date')))
+            $server_date = date('Y-m-d H:i:s');
+        return $server_date;
+    }
+   
+
+
+
+
+
+
 }

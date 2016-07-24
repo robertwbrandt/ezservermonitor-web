@@ -2,30 +2,45 @@
 
 class Config
 {
-    public $file = null;
+    public $default = null;
     public $config = null;
+
 
     public function __construct()
     {
         $this->_checkPHPVersion(5.3);
-
-        $this->file = __DIR__.'/../../conf/esm.config.json';
-
-        if (!file_exists($this->file))
-            throw new \Exception('Config file '.basename($this->file).' not found');
-
-        $this->_readFile();
+        $this->default = $this->_readFile( __DIR__.'/../../conf/esm.default.json' );
+        $this->config = $this->_readFile( __DIR__.'/../../conf/esm.config.json' );
     }
 
-    private function _readFile()
-    {
-        $content = file_get_contents($this->file);
-        $this->config = json_decode(utf8_encode($content), true);
 
-        if ($this->config == null && json_last_error() != JSON_ERROR_NONE)
+    private function _readFile($file)
+    {
+        if (!file_exists($file))
+            throw new \Exception('Config file '.basename($file).' not found');
+
+        $content = file_get_contents($file);
+        $temp = json_decode(utf8_encode($content), true);
+        if ($temp == null && json_last_error() != JSON_ERROR_NONE)
+            throw new \LogicException(sprintf("Failed to parse config file '%s'. Error: '%s'", basename($file) , json_last_error_msg()));
+        return $temp;
+    }
+
+
+    private function _get($var, $file = 'config')
+    {
+        $tab = $file == 'config' ? $this->config : $this->default;
+        
+        $explode = explode(':', $var);
+        
+        foreach ($explode as $vartmp)
         {
-            throw new \LogicException(sprintf("Failed to parse config file '%s'. Error: '%s'", basename($this->file) , json_last_error_msg()));
+            if (isset($tab[$vartmp]))
+                $tab = $tab[$vartmp];
+            else
+                return null;
         }
+        return $tab == $this->config ? null : $tab;
     }
 
 
@@ -35,29 +50,19 @@ class Config
      */
     public function get($var)
     {
-        $tab = $this->config;
-        
-        $explode = explode(':', $var);
-        
-        foreach ($explode as $vartmp)
-        {
-            if (isset($tab[$vartmp]))
-            {
-                $tab = $tab[$vartmp];
-            }
-        }
-
-        // return $tab == $this->config ? null : $tab;
+        $tab = $this->_get($var,'config');
+        if ($tab == null)
+            $tab = $this->_get($var,'default');
         return $tab;
     }
-    
+
     
     /**
      * Returns all config variables
      */
     public function getAll()
     {
-        return $this->config;
+        return array_merge($this->default,$this->config);
     }
 
 
@@ -116,6 +121,105 @@ class Config
             }
         }
     }
+
+
+    /**
+     * Formats the string before it is written for HTML
+     *
+     * @param  string   $string  config variable
+     * @param  array    $string  array containing previous config variable (to check for infinite recursion)
+     * @return string            formatted string
+     */
+    public function format($var, $recursion = array())
+    {
+        // if (in_array($var, $recursion))
+        //     throw new \Exception('Infinite recursion detected in configurations: ' . $var . '->' . implode('->', array_reverse($recursion)));
+        array_push($recursion, $var);
+
+        $patterns = array();
+        $replacements = array();        
+        $pattern[0] = '/({{.*?}})/';
+        $pattern[1] = '/({%.*?%})/';
+        $replacement[0] = "\x0" . '${1}' . "\x0";
+        $replacement[1] = "\x0" . '${1}' . "\x0";
+        $tmp = preg_replace( $pattern, $replacement, $this->get($var) );
+
+        $output = '';
+        $count = 0;
+
+        foreach ( explode("\x0", $tmp) as $line) {
+            if ($line) {
+                if (( substr($line, 0, 2) == "{{") and (substr($line, -2) == "}}" )) {
+                    $line = explode(":",substr($line, 2, -2));
+                    if ($line[0] == "env") {
+                        $line = getenv($line[1]);
+                    } elseif ($line[0] == "esm") {
+                        switch ($line[1]) {
+                        case 'ip':
+                            $line = Misc::getLanIp();
+                            break;
+                        case 'hostname':
+                            $line = Misc::getHostname();
+                            break;
+                        case 'cpucores':
+                            $line = Misc::getCpuCoresNumber();
+                            break;
+                        case 'os':
+                            $line = Misc::getOS();
+                            break;
+                        case 'release':
+                            $line = Misc::getRelease();
+                            break;
+                        case 'kernelversion':
+                            $line = Misc::getVersion();
+                            break;
+                        case 'machinetype':
+                            $line = Misc::getMachineType();
+                            break;
+                        case 'uptime':
+                            $line = Misc::getUpTime();
+                            break;
+                        case 'boottime':
+                            $line = Misc::getBootTime();
+                            break;
+                        case 'currentusers':
+                            $line = Misc::getCurrentUsers();
+                            break;
+                        case 'currentdate':
+                            $line = Misc::getCurrentDate();
+                            break;
+
+
+
+
+
+
+
+
+
+                        default:
+                            $line = implode(":", $line);
+                            array_push($recursion, $line);
+                            $line = $this->format($line, $recursion);
+                        }
+                    } else {
+                        $line = implode(":", $line);
+                        array_push($recursion, $line);
+                        $line = $this->format($line, $recursion);
+                    }
+                    $line = htmlentities($line);
+                } elseif (( substr($line, 0, 2) == "{%") and (substr($line, -2) == "%}" )) {
+                    $line = substr($line, 2, -2);
+                }
+
+                $output .= strval($line);
+        
+                // $output .= strval($count) . "=" . strval($line) . "|";
+                // $count += 1;
+            }
+        }
+        return $output;
+    }    
 }
 
 
