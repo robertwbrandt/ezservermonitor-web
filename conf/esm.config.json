@@ -8,21 +8,28 @@
 
 		"sublogo_text": "eZ Server Monitor - v2.5",
 		"sublogo_href": "http://www.ezservermonitor.com",
+		
+		"banner_top": "OPW Zarafa Dashboard",
+		"banner_bottom": "cpu:cpu:cores = {{esm:cpu:cores}}",
 
 		"check_updates": false,
 		"auto_refresh": 300,
 		"theme": "light",
-		"banner_1": "OPW Zarafa Dashboard",
-		"banner_2": "currentdate = {{esm:currentdate}}"
+
+		"layout": [ 
+            ["system", "load_average"],
+            ["disk"],
+            ["memory","swap"],
+            ["last_login","ping","services"]
+         ]
+
 	},
 
 	"cpu": {
-		"enable": true,
 		"enable_temperature": true
 	},
 
 	"services": {
-        "enable": true,		
 		"show_port": true,
 		"list": [
 			{
@@ -77,19 +84,16 @@
 		]
 	},
 	"disk": {
-        "enable": true,		
-		"show_tmpfs": false,
-		"show_filesystem": false
+		"show_tmpfs": true,
+		"show_filesystem": true
 	},
 	"ping": {
-        "enable": true,		
 		"hosts": [
 			"mail.i.opw.ie",
 			"activesync.opw.ie"
 		]
 	},
 	"last_login": {
-		"enable": false,
 		"max": 5
 	}
 }

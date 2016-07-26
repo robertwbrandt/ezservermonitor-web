@@ -161,9 +161,6 @@ class Config
                         case 'hostname':
                             $line = Misc::getHostname();
                             break;
-                        case 'cpucores':
-                            $line = Misc::getCpuCoresNumber();
-                            break;
                         case 'os':
                             $line = Misc::getOS();
                             break;
@@ -188,15 +185,17 @@ class Config
                         case 'currentdate':
                             $line = Misc::getCurrentDate();
                             break;
-
-
-
-
-
-
-
-
-
+                        case 'cpu':
+                            switch ($line[2]) {
+                            case 'cores':
+                            case 'model':
+                            case 'frequency':
+                            case 'cache':
+                            case 'bogomips':
+                            case 'temperature':
+                                $line = Misc::getCPUData($line[2]);
+                            }
+                            break;
                         default:
                             $line = implode(":", $line);
                             array_push($recursion, $line);

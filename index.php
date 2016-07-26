@@ -59,8 +59,8 @@ $update = $Config->checkUpdate();
 
     <div id="banner">
         <span id="banner-vcenter">
-            <span id="banner-top"><?= $Config->format('esm:banner_1') ?></span>
-            <span id="banner-bottom"><?= $Config->format('esm:banner_2') ?></span>
+            <span id="banner-top"><?= $Config->format('esm:banner_top') ?></span>
+            <span id="banner-bottom"><?= $Config->format('esm:banner_bottom') ?></span>
         </span>
     </div>
 

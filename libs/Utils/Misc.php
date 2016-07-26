@@ -32,26 +32,6 @@ class Misc
     {
         return php_uname('n');
     }
-
-
-    /**
-     * Returns CPU cores number
-     * 
-     * @return  int  Number of cores
-     */
-    public static function getCpuCoresNumber()
-    {
-        if (!($num_cores = shell_exec('/bin/grep -c ^processor /proc/cpuinfo')))
-        {
-            if (!($num_cores = trim(shell_exec('/usr/bin/nproc'))))
-            {
-                $num_cores = 1;
-            }
-        }
-        if ((int)$num_cores <= 0)
-            $num_cores = 1;
-        return (int)$num_cores;
-    }
     /**
      * Returns server IP
      *
@@ -280,11 +260,79 @@ class Misc
             $server_date = date('Y-m-d H:i:s');
         return $server_date;
     }
-   
+    /**
+     * Returns Server CPU Data
+     *
+     * @param   string  $parameter    CPU Parameter ( cores|model|frequency|cache|bogomips|temperature|all )
+     * @return  string                CPU Data
+     */
+    public static function getCPUData($parameter = 'all')
+    {
+        $cpu_data = array(
+            'model'       => 'N.A',
+            'cores'       => 0,
+            'frequency'   => 'N.A',
+            'cache'       => 'N.A',
+            'bogomips'    => 'N.A',
+            'temperature' => 'N.A' );
+
+        if ($cpuinfo = shell_exec('cat /proc/cpuinfo'))
+            foreach (preg_split('/\s?\n\s?\n/', trim($cpuinfo)) as $processor)
+                foreach (preg_split('/\n/', $processor, -1, PREG_SPLIT_NO_EMPTY) as $detail)
+                {
+                    list($key, $value) = preg_split('/\s*:\s*/', trim($detail));
+                    switch (strtolower($key))
+                    {
+                        case 'processor':
+                            $cpu_data['model'] = $value;
+                            $cpu_data['cores'] += 1;
+                        break;
+
+                        case 'model name':
+                        case 'cpu model':
+                        case 'cpu':
+                            $cpu_data['model'] = $value;
+                        break;
 
 
+                        case 'cpu mhz':
+                        case 'clock':
+                            $cpu_data['frequency'] = $value.' MHz';
+                        break;
 
+                        case 'cache size':
+                        case 'l2 cache':
+                            $cpu_data['cache'] = $value;
+                        break;
 
+                        case 'bogomips':
+                            $cpu_data['bogomips'] = $value;
+                        break;
+                    }
+                }
 
+        if ((($parameter == 'all') or ($parameter == 'cores')) and ($cpu_data['cores'] <= 0))
+            if (!($cpu_data['cores'] = trim(shell_exec('/usr/bin/nproc'))))
+                $cpu_data['cores'] = 1;
+            if ((int)$cpu_data['cores'] <= 0)
+                $cpu_data['cores'] = 1;
+
+        if ((($parameter == 'all') or ($parameter == 'frequency')) and ($cpu_data['frequency'] == 'N.A'))
+            if ($f = shell_exec('cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq'))
+                $cpu_data['frequency'] = ($f / 1000).' MHz';
+
+        if (($parameter == 'all') or ($parameter == 'temperature'))
+            if (exec('/usr/bin/sensors | grep -E "^(CPU Temp|Core 0)" | cut -d \'+\' -f2 | cut -d \'.\' -f1', $t))
+                if (isset($t[0]))
+                    $cpu_data['temperature'] = $t[0].' °C';
+            else
+                if (exec('cat /sys/class/thermal/thermal_zone0/temp', $t))
+                    $cpu_data['temperature'] = round($t[0] / 1000).' °C';
+
+        if ($parameter == 'all') 
+            return $cpu_data;
+        else
+            return $cpu_data[$parameter];
+    }
 
 }

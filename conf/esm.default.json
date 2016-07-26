@@ -16,32 +16,55 @@
         "sublogo_text": "{{esm:product}} - v{{esm:version}}",
         "sublogo_href": "{{esm:website}}",
 
-        "banner_1": "{{esm:hostname}}",
-        "banner_2": ""
+        "banner_top": "{{esm:hostname}}",
+        "banner_bottom": "",
+
+        "layout": [ 
+            ["system", "load_average"],
+            ["network", "cpu"],
+            ["disk"],
+            ["memory","swap"],
+            ["last_login","ping","services"]
+        ]        
     },
+    "system": {
+        "title": "System"
+    },
+    "load_average": {
+        "title": "Load Average"
+    },
+    "network": {
+        "title": "Network usage"
+    },    
     "cpu": {
-        "enable": true,
+        "title": "CPU",
         "enable_temperature": true
     },
     "disk": {
-        "enable": true,        
+        "title": "Disk usage",        
         "show_tmpfs": false,
         "show_filesystem": true
     },
+    "memory": {
+        "title": "Memory"
+    },   
+    "swap": {
+        "title": "Swap"
+    },
+    "last_login": {
+        "title": "Last login",        
+        "max": 5
+    },
     "ping": {
-        "enable": true,        
+        "title": "Ping",
         "hosts": [
             "facebook.com",
             "google.com",
             "yahoo.com"
         ]
     },
-    "last_login": {
-        "enable": true,
-        "max": 5
-    },
     "services": {
-        "enable": true,        
+        "title": "Network services",        
         "show_port": true,
         "list": [
             {
