@@ -93,85 +93,24 @@ $update = $Config->checkUpdate();
                 $type = [];
             }
             echo "\n\n<div class=\"cls\"></div>\n\n";
+            echo "<div class=\"t-center\">\n";
             for ($c = 0; $c < count($type); $c++) {
     ?>
-    <div class="box <?=$type[$c]?>" id="esm-<?=$line[$c]?>">
-        <div class="box-header">
-            <h1><?=$Config->format($line[$c].":title")?></h1>
-            <ul>
-                <li><a href="#" class="reload" onclick="esm.reloadBlock('<?=$line[$c]?>');"><span class="icon-cycle"></span></a></li>
-            </ul>
-        </div>
+        <div class="box <?=$type[$c]?>" id="esm-<?=$line[$c]?>">
+            <div class="box-header">
+                <h1><?=$Config->format($line[$c].":title")?></h1>
+                <ul>
+                    <li><a href="#" class="reload" onclick="esm.reloadBlock('<?=$line[$c]?>');"><span class="icon-cycle"></span></a></li>
+                </ul>
+            </div>
     <?php
                 require './plugins/'.$line[$c].'/'.$line[$c].'-html.php';
                 echo "\n</div>\n";
             }     
+            echo "\n</div>\n";
         }
     ?>
 
-<!-- 
-
-
-    <div class="t-center">
-        <div class="box column-left column-33" id="esm-last_login">
-            <div class="box-header">
-                <h1>Last login</h1>
-                <ul>
-                    <li><a href="#" class="reload" onclick="esm.reloadBlock('last_login');"><span class="icon-cycle"></span></a></li>
-                </ul>
-            </div>
-
-            <div class="box-content">
-                <?php if ($Config->get('last_login:enable') == true): ?>
-                    <table>
-                        <tbody></tbody>
-                    </table>
-                <?php else: ?>
-                    <p>Disabled</p>
-                <?php endif; ?>
-            </div>
-        </div>
-
-
-
-        <div class="box column-right column-33" id="esm-services">
-            <div class="box-header">
-                <h1>Services status</h1>
-                <ul>
-                    <li><a href="#" class="reload" onclick="esm.reloadBlock('services');"><span class="icon-cycle"></span></a></li>
-                </ul>
-            </div>
-
-            <div class="box-content">
-                <table>
-                    <tbody></tbody>
-                </table>
-            </div>
-        </div>
-
-
-
-
-        <div class="box t-center" style="margin: 0 33%;" id="esm-ping">
-            <div class="box-header">
-                <h1>Ping</h1>
-                <ul>
-                    <li><a href="#" class="reload" onclick="esm.reloadBlock('ping');"><span class="icon-cycle"></span></a></li>
-                </ul>
-            </div>
-
-            <div class="box-content">
-                <table>
-                    <tbody></tbody>
-                </table>
-            </div>
-        </div>
-
-    </div>
- -->
-    
-
-    <div class="cls"></div>
 
 </div>
 

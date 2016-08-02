@@ -19,9 +19,6 @@
 		"theme": "light",
 
 		"layout": [ 
-            ["system", "load_average"],
-            ["disk"],
-            ["memory","swap"],
             ["last_login","ping","services"]
          ]
 
