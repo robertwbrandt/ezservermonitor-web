@@ -18,10 +18,13 @@
 		"auto_refresh": 300,
 		"theme": "light",
 
-		"layout": [ 
-            ["last_login","ping","services"]
-         ]
-
+        "layout": [ 
+            ["50-50",["system", "load_average"]],
+            ["50-50",["network", "cpu"]],
+            ["100",["disk"]],
+            ["50-50",["memory","swap"]],
+            ["33-33-33",["last_login","ping","services"]]
+        ] 
 	},
 
 	"cpu": {

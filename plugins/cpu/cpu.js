@@ -1,6 +1,6 @@
-esm.system = function() {
+esm.cpu = function() {
 
-    var module = 'system';
+    var module = 'cpu';
     
     esm.reloadBlock_spin(module);
 
@@ -13,5 +13,5 @@ esm.system = function() {
         esm.reloadBlock_spin(module);
 
     }, 'json');
-    
+
 }

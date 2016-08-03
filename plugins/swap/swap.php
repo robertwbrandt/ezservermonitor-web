@@ -1,5 +1,5 @@
 <?php
-require '../autoload.php';
+require '../../autoload.php';
 
 // Free
 if (!($free = shell_exec('grep SwapFree /proc/meminfo | awk \'{print $2}\'')))

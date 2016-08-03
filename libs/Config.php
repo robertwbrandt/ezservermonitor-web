@@ -4,13 +4,20 @@ class Config
 {
     public $default = null;
     public $config = null;
+    public $plugins = array();
 
 
     public function __construct()
     {
         $this->_checkPHPVersion(5.3);
-        $this->default = $this->_readFile( __DIR__.'/../../conf/esm.default.json' );
-        $this->config = $this->_readFile( __DIR__.'/../../conf/esm.config.json' );
+        $this->default = $this->_readFile( __DIR__.'/../conf/esm.default.json' );
+        $this->config = $this->_readFile( __DIR__.'/../conf/esm.config.json' );
+        foreach ($this->get('esm:layout') as $line) {
+            if ($line[1]) foreach ( $line[1] as $plugin) {
+                if (file_exists( __DIR__.'/../plugins/'.$plugin.'/'.$plugin.'.html.php' ))
+                    array_push($this->plugins,$plugin);
+            }
+        }
     }
 
 
@@ -218,7 +225,7 @@ class Config
             }
         }
         return $output;
-    }    
+    }
 }
 
 

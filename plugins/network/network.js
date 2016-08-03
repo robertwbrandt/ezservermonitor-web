@@ -1,6 +1,6 @@
-esm.ping = function() {
+esm.network = function() {
 
-    var module = 'ping';
+    var module = 'network';
     
     esm.reloadBlock_spin(module);
 
@@ -13,13 +13,15 @@ esm.ping = function() {
         {
             var html = '';
             html += '<tr>';
-            html += '<td>'+data[line].host+'</td>';
-            html += '<td>'+data[line].ping+' ms</td>';
+            html += '<td>'+data[line].interface+'</td>';
+            html += '<td>'+data[line].ip+'</td>';
+            html += '<td class="t-center">'+data[line].receive+'</td>';
+            html += '<td class="t-center">'+data[line].transmit+'</td>';
             html += '</tr>';
 
             $box.append(html);
         }
-    
+
         esm.reloadBlock_spin(module);
 
     }, 'json');

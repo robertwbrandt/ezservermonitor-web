@@ -20,11 +20,11 @@
         "banner_bottom": "",
 
         "layout": [ 
-            ["system", "load_average"],
-            ["network", "cpu"],
-            ["disk"],
-            ["memory","swap"],
-            ["last_login","ping","services"]
+            ["50-50",["system", "load_average"]],
+            ["50-50",["network", "cpu"]],
+            ["100",["disk"]],
+            ["50-50",["memory","swap"]],
+            ["33-33-33",["last_login","ping","services"]]
         ]        
     },
     "system": {
