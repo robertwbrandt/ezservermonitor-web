@@ -3,10 +3,9 @@ esm.services = function() {
     var module = 'services';
     
     esm.reloadBlock_spin(module);
-
     $.get('plugins/'+module+'/'+module+'.php', function(data) {
-
         var $box = $('.box#esm-'+module+' .box-content tbody');
+
         $box.empty();
 
         for (var line in data)
@@ -25,7 +24,5 @@ esm.services = function() {
         }
     
         esm.reloadBlock_spin(module);
-
     }, 'json');
-
 }

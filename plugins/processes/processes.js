@@ -1,11 +1,12 @@
-esm.disk = function() {
+esm.processes = function() {
 
-    var module = 'disk';
-
+    var module = 'processes';
+    
     esm.reloadBlock_spin(module);
-    $.get('plugins/'+module+'/'+module+'.php', function(data) {
-        var $box = $('.box#esm-'+module+' .box-content tbody');
 
+    $.get('plugins/'+module+'/'+module+'.php', function(data) {
+
+        var $box = $('.box#esm-'+module+' .box-content tbody');
         $box.empty();
 
         for (var line in data)
@@ -36,5 +37,7 @@ esm.disk = function() {
         }
     
         esm.reloadBlock_spin(module);
+
     }, 'json');
+
 }

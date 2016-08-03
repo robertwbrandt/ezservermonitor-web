@@ -3,10 +3,9 @@ esm.last_login = function() {
     var module = 'last_login';
     
     esm.reloadBlock_spin(module);
-
     $.get('plugins/'+module+'/'+module+'.php', function(data) {
-
         var $box = $('.box#esm-'+module+' .box-content tbody');
+
         $box.empty();
 
         for (var line in data)
@@ -21,7 +20,5 @@ esm.last_login = function() {
         }
     
         esm.reloadBlock_spin(module);
-
     }, 'json');
-
 }

@@ -13,11 +13,11 @@ $update = $Config->checkUpdate();
    
     <link rel="stylesheet" href="web/css/utilities.css" type="text/css">
     <link rel="stylesheet" href="web/css/frontend.css" type="text/css">
-<?php
-foreach ($Config->plugins as $plugin)
-    if (file_exists( __DIR__.'/plugins/'.$plugin.'/'.$plugin.'.css' ))
-        echo "\t".'<link rel="stylesheet" href="'.'/plugins/'.$plugin.'/'.$plugin.'.css" type="text/css">'."\n";
-?>
+    <?php
+    foreach ($Config->plugins as $plugin)
+        if (file_exists( __DIR__.'/plugins/'.$plugin.'/'.$plugin.'.css' ))
+            echo "\t".'<link rel="stylesheet" href="'.'/plugins/'.$plugin.'/'.$plugin.'.css" type="text/css">'."\n";
+    ?>
     <link rel="icon" type="image/x-icon" href="<?= $Config->format('esm:favicon') ?>">
     <!--[if IE]>
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
