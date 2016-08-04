@@ -37,7 +37,7 @@ if (!(exec('/bin/df -T -P | awk -v c=`/bin/df -T | grep -bo "Type" | awk -F: \'{
 else
 {
     $processes = array();
-    $inc_processes = array()
+    $inc_processes = array();
     $cores = Misc::getCPUData('cores');
     if ($cores < 1) $cores = 1;
 
