@@ -7,9 +7,9 @@ $datas = array();
 $max = $Config->get('processes:max');
 $sort = $Config->get('processes:sort');
 if ( $sort == 'mem' ) {
-    $sort = 'pmem';
+    $sort = '-pmem';
 } else {
-    $sort = 'pcpu';
+    $sort = '-pcpu';
 }
 
 $include = $Config->get('processes:include');
@@ -20,13 +20,13 @@ $exclude = '\('.implode('\|',$exclude).'\)';
 echo $exclude."\n";
 
 
-$command = 'ps -eo pcpu,pmem,args --noheader --sort -'.$sort;
+$command = 'ps -eo "pcpu,pmem,args" --noheader --sort '.$sort;
 if ($exclude)
     $command .= ' | grep -v "'.$exclude.'"';
-
+$command .= ' | sed -e "s|^\s||" -e "s|\s\+|,|g" | cut -d "," -f 1-3 | sed "s|/.*/||"';
 echo $command."\n";
 
-//ps -eo pcpu,pmem,args --sort -pcpu --noheader | grep -v "\(sublime\|vpn\)" | head -n 10
+// ps -eo pcpu,pmem,args --noheader --sort -pcpu | grep -v "\(python\|sublime\|games\|\[.*\]\)" | sed -e "s|^\s||" -e "s|\s\+|,|g" | cut -d "," -f 1-3 | sed "s|/.*/||" 
 
 if (!(exec('/bin/df -T -P | awk -v c=`/bin/df -T | grep -bo "Type" | awk -F: \'{print $2}\'` \'{print substr($0,c);}\' | tail -n +2 | awk \'{print $1","$2","$3","$4","$5","$6","$7}\'', $df)))
 {
