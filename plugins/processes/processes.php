@@ -8,9 +8,9 @@ $max = $Config->get('processes:max');
 if ($max < 1) $max = 5;
 $sort = $Config->get('processes:sort');
 if ( $sort == 'mem' ) {
-    $sort = '-pmem';
+    $sort = '+pmem';
 } else {
-    $sort = '-pcpu';
+    $sort = '+pcpu';
 }
 
 $include = $Config->get('processes:include');
