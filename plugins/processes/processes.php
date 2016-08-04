@@ -39,6 +39,7 @@ else
     if ($cores < 1) $cores = 1;
 
     foreach ($ps as $line) {
+        echo json_encode($line)."\n";
         list($cpu, $mem, $process) = explode(',', $line);
 
         $tmp =  array( 'cpu'      => $cpu/$cores,
