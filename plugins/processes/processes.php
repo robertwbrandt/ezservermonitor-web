@@ -8,9 +8,9 @@ $max = $Config->get('processes:max');
 if ($max < 1) $max = 5;
 $sort = $Config->get('processes:sort');
 if ( $sort == 'mem' ) {
-    $sort = '+pmem';
+    $sort = '-pmem';
 } else {
-    $sort = '+pcpu';
+    $sort = '-pcpu';
 }
 
 $include = $Config->get('processes:include');
@@ -42,9 +42,11 @@ if (!(exec($command, $ps))) {
                        'process'  => $process );  
 
         if (in_array($process, $include))
-            array_push($inc_processes, $tmp);
+            if (!in_array($tmp, $inc_processes))
+                array_push($inc_processes, $tmp);
         else
-            array_push($processes, $tmp);
+            if (!in_array($tmp, $processes))            
+                array_push($processes, $tmp);
     }
 
     $datas = array_merge($inc_processes, $processes);
