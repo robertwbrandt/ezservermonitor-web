@@ -36,7 +36,7 @@
 		"list": [
 			{
 				"name": "Database Server",
-				"host": "localhost",
+				"host": "10.200.200.22",
 				"port": 3306,
 				"protocol": "tcp"
 			},      
