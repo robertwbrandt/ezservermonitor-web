@@ -4,6 +4,25 @@ $Config = new Config();
 
 $datas = array();
 
+$max = $Config->get('processes:max');
+$sort = $Config->get('processes:sort');
+if ( $sort == 'mem' ): 
+    $sort = 'pmem';
+else:
+    $sort = 'pcpu';
+
+$include = $Config->get('processes:include');
+$exclude = $Config->get('processes:exclude');
+array_push($exclude,'\[.*\]');
+$exclude = '\('.implode('\|',$exclude).'\)';
+
+echo $exclude."\n";
+
+
+$command = 'ps -eo pcpu,pmem,args --noheader --sort -'.$sort;
+if ($exclude): $command .= ' | grep -v "'.$exclude.'"';
+
+echo $command."\n";
 
 //ps -eo pcpu,pmem,args --sort -pcpu --noheader | grep -v "\(sublime\|vpn\)" | head -n 10
 

@@ -97,5 +97,11 @@
 	},
 	"last_login": {
 		"max": 5
-	}
+	},
+	"processes": {
+		"max": 10,
+		"sort": "cpu",
+		"include": ["mysql","apache2","nginx"],
+		"exclude": ["python","sublime", "games"]
+	}	
 }
