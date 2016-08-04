@@ -18,9 +18,6 @@ $exclude = $Config->get('processes:exclude');
 array_push($exclude,'\[.*\]');
 $exclude = '\('.implode('\|',$exclude).'\)';
 
-echo $exclude."\n";
-
-
 $command = 'ps -eo "pcpu,pmem,args" --noheader --sort '.$sort;
 if ($exclude)
     $command .= ' | grep -v "'.$exclude.'"';
@@ -54,7 +51,8 @@ else
             array_push($processes, $tmp);
     }
 
-    $datas = array_slice(array_merge($inc_processes, $processes),0,$max);
+    $datas = array_merge($inc_processes, $processes);
+    // $datas = array_slice(array_merge($inc_processes, $processes),0,$max);
 
 }
 
