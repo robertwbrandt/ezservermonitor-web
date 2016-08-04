@@ -44,14 +44,14 @@ else
     foreach ($ps as $line) {
         list($cpu, $mem, $process) = explode(',', $line);
 
+        $tmp =  array( 'cpu'      => $cpu/$cores,
+                       'mem'      => $mem,
+                       'process'  => $process );  
+
         if (in_array($process, $include))
-            array_push($inc_processes, array( 'cpu'      => $cpu/$cores,
-                                          'mem'      => $mem,
-                                          'process'  => $process );            
+            array_push($inc_processes, $tmp);
         else
-            array_push($processes, array( 'cpu'      => $cpu/$cores,
-                                          'mem'      => $mem,
-                                          'process'  => $process );
+            array_push($processes, $tmp);
     }
 
     $datas = array_slice(array_merge($inc_processes, $processes),0,$max);
