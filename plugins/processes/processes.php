@@ -11,7 +11,7 @@ if ( $sort !== 'mem' ) $sort = 'cpu';
 
 $include = $Config->get('processes:include');
 $exclude = $Config->get('processes:exclude');
-array_push($exclude,'\[.*\]','\\_');
+// array_push($exclude,'\[.*\]','\\_');
 $exclude = '\('.implode('\|',$exclude).'\)';
 
 $command = 'ps xf -o "pcpu,pmem,args" --noheader';
