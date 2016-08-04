@@ -334,5 +334,21 @@ class Misc
         else
             return $cpu_data[$parameter];
     }
+    /**
+     * Search Multidimentional Array
+     *
+     * @param   array  $array    The array to search
+     * @param   multi  $field    The field of the array
+     * @param   multi  $value    The value to search for
+     * @return  multi            key where the value was found, or False
+     */
+    public static function multiarray_search($array, $field, $value, $bad_return = False)
+    {
+        foreach($array as $key => $data)
+            if ( $data[$field] === $value )
+                return $key;
+       return $bad_return;
+    }
+
 
 }

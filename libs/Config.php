@@ -11,7 +11,10 @@ class Config
     {
         $this->_checkPHPVersion(5.3);
         $this->default = $this->_readFile( __DIR__.'/../conf/esm.default.json' );
-        $this->config = $this->_readFile( __DIR__.'/../conf/esm.config.json' );
+        if (file_exists('/etc/ezservermonitor/esm.config.json'))
+            $this->config = $this->_readFile( '/etc/ezservermonitor/esm.config.json' );            
+        else
+            $this->config = $this->_readFile( __DIR__.'/../conf/esm.config.json' );
         foreach ($this->get('esm:layout') as $line) {
             if ($line[1]) foreach ( $line[1] as $plugin) {
                 if (file_exists( __DIR__.'/../plugins/'.$plugin.'/'.$plugin.'.html.php' ))

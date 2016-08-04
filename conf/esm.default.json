@@ -107,8 +107,8 @@
     },
     "processes": {
         "max": 10,
-        "sort": "cpu",
+        "sort": "mem",
         "include": ["mysql","apache2","nginx"],
-        "exclude": ["python","sublime", "games"]
+        "exclude": ["init", "games"]
     }       
 }
