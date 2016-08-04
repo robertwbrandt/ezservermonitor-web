@@ -5,6 +5,7 @@ $Config = new Config();
 $datas = array();
 
 $max = $Config->get('processes:max');
+if ($max < 1) $max = 5;
 $sort = $Config->get('processes:sort');
 if ( $sort == 'mem' ) {
     $sort = '-pmem';
@@ -24,51 +25,36 @@ $command = 'ps -eo "pcpu,pmem,args" --noheader --sort '.$sort;
 if ($exclude)
     $command .= ' | grep -v "'.$exclude.'"';
 $command .= ' | sed -e "s|^\s||" -e "s|\s\+|,|g" | cut -d "," -f 1-3 | sed "s|/.*/||"';
-echo $command."\n";
 
-// ps -eo pcpu,pmem,args --noheader --sort -pcpu | grep -v "\(python\|sublime\|games\|\[.*\]\)" | sed -e "s|^\s||" -e "s|\s\+|,|g" | cut -d "," -f 1-3 | sed "s|/.*/||" 
-
-if (!(exec('/bin/df -T -P | awk -v c=`/bin/df -T | grep -bo "Type" | awk -F: \'{print $2}\'` \'{print substr($0,c);}\' | tail -n +2 | awk \'{print $1","$2","$3","$4","$5","$6","$7}\'', $df)))
+if (!(exec('/bin/df -T -P | awk -v c=`/bin/df -T | grep -bo "Type" | awk -F: \'{print $2}\'` \'{print substr($0,c);}\' | tail -n +2 | awk \'{print $1","$2","$3","$4","$5","$6","$7}\'', $ps)))
 {
     $datas[] = array(
-        'total'         => 'N.A',
-        'used'          => 'N.A',
-        'free'          => 'N.A',
-        'percent_used'  => 0,
-        'mount'         => 'N.A',
-        'filesystem'    => 'N.A',
+        'cpu'     => 0,
+        'mem'     => 0,
+        'process' => 'N.A'
     );
 }
 else
 {
-    $mounted_points = array();
-    $key = 0;
+    $processes = array();
+    $inc_processes = array()
+    $cores = Misc::getCPUData('cores');
+    if ($cores < 1) $cores = 1;
 
-    foreach ($df as $mounted)
-    {
-        list($filesystem, $type, $total, $used, $free, $percent, $mount) = explode(',', $mounted);
+    foreach ($ps as $line) {
+        list($cpu, $mem, $process) = explode(',', $line);
 
-        if (strpos($type, 'tmpfs') !== false && $Config->get('disk:show_tmpfs') === false)
-            continue;
-
-        if (!in_array($mount, $mounted_points))
-        {
-            $mounted_points[] = trim($mount);
-
-            $datas[$key] = array(
-                'total'         => Misc::getSize($total * 1024),
-                'used'          => Misc::getSize($used * 1024),
-                'free'          => Misc::getSize($free * 1024),
-                'percent_used'  => trim($percent, '%'),
-                'mount'         => $mount,
-            );
-
-            if ($Config->get('disk:show_filesystem'))
-                $datas[$key]['filesystem'] = $filesystem;
-        }
-
-        $key++;
+        if (in_array($process, $include))
+            array_push($inc_processes, array( 'cpu'      => $cpu/$cores,
+                                          'mem'      => $mem,
+                                          'process'  => $process );            
+        else
+            array_push($processes, array( 'cpu'      => $cpu/$cores,
+                                          'mem'      => $mem,
+                                          'process'  => $process );
     }
+
+    $datas = array_slice(array_merge($inc_processes, $processes),0,$max);
 
 }
 
