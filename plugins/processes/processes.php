@@ -11,10 +11,10 @@ if ( $sort !== 'mem' ) $sort = 'cpu';
 
 $include = $Config->get('processes:include');
 $exclude = $Config->get('processes:exclude');
-// array_push($exclude,'\[.*\]','\\_');
+array_push($exclude,'\[.*\]','\\_');
 $exclude = '\('.implode('\|',$exclude).'\)';
 
-$command = 'ps xf -o "pcpu,pmem,args" --noheader';
+$command = 'ps xf -eo "pcpu,pmem,args" --noheader';
 if ($exclude)
     $command .= ' | grep -v "'.$exclude.'"';
 $command .= ' | sed -e "s|^\s||" -e "s|\s\+|,|g" | cut -d "," -f 1-3 | sed "s|/.*/||"';
