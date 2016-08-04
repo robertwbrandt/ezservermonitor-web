@@ -23,16 +23,12 @@ if ($exclude)
     $command .= ' | grep -v "'.$exclude.'"';
 $command .= ' | sed -e "s|^\s||" -e "s|\s\+|,|g" | cut -d "," -f 1-3 | sed "s|/.*/||"';
 
-if (!(exec('/bin/df -T -P | awk -v c=`/bin/df -T | grep -bo "Type" | awk -F: \'{print $2}\'` \'{print substr($0,c);}\' | tail -n +2 | awk \'{print $1","$2","$3","$4","$5","$6","$7}\'', $ps)))
-{
+if (!(exec($command, $ps))) {
     $datas[] = array(
         'cpu'     => 0,
         'mem'     => 0,
-        'process' => 'N.A'
-    );
-}
-else
-{
+        'process' => 'N.A' );
+} else {
     $processes = array();
     $inc_processes = array();
     $cores = Misc::getCPUData('cores');
