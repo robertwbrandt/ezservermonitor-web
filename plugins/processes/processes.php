@@ -6,11 +6,10 @@ $datas = array();
 
 $max = $Config->get('processes:max');
 $sort = $Config->get('processes:sort');
-if ( $sort == 'mem' ): {
+if ( $sort == 'mem' )
     $sort = 'pmem';
-} else: {
+else
     $sort = 'pcpu';
-}
 
 $include = $Config->get('processes:include');
 $exclude = $Config->get('processes:exclude');
