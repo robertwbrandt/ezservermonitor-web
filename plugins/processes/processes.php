@@ -19,8 +19,6 @@ if ($exclude)
     $command .= ' | grep -v "'.$exclude.'"';
 $command .= ' | sed -e "s|^\s||" -e "s|\s\+|,|g" | cut -d "," -f 1-3 | sed "s|/.*/||"';
 
-print_r( $command."\n" );
-
 if (!(exec($command, $ps))) {
     $datas[] = array(
         'cpu'     => 0,
@@ -50,4 +48,4 @@ if (!(exec($command, $ps))) {
 
 }
 
-print_r( json_encode($datas) );
+echo json_encode($datas);
