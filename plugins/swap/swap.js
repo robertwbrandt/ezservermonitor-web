@@ -3,7 +3,7 @@ esm.swap = function() {
     var module = 'swap';
     
     esm.reloadBlock_spin(module);
-    $.get('plugins/'+module+'/'+module+'.php', function(data) {
+    $.get('plugins/'+module+'/'+module+'.json.php', function(data) {
         var $box = $('.box#esm-'+module+' .box-content tbody');
 
         esm.insertDatas($box, module, data);

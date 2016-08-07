@@ -27,4 +27,4 @@ else
 
 $datas = $load;
 
-echo json_encode($datas);
+echo json_encode($datas, JSON_PRETTY_PRINT);

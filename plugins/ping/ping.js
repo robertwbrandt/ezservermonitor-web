@@ -3,7 +3,7 @@ esm.ping = function() {
     var module = 'ping';
     
     esm.reloadBlock_spin(module);
-    $.get('plugins/'+module+'/'+module+'.php', function(data) {
+    $.get('plugins/'+module+'/'+module+'.json.php', function(data) {
         var $box = $('.box#esm-'+module+' .box-content tbody');
 
 

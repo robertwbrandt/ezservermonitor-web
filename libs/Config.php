@@ -218,13 +218,51 @@ class Config
                     }
                     $line = htmlentities($line);
                 } elseif (( substr($line, 0, 2) == "{%") and (substr($line, -2) == "%}" )) {
-                    $line = substr($line, 2, -2);
+                    $line = explode(":",substr($line, 2, -2));                    
+                    switch ($line[0]) {
+                    case 'bold':
+                        $line = ($line[1] == 'on' ? '<b>' : '</b>');
+                        break;
+                    case 'strong':
+                        $line = ($line[1] == 'on' ? '<strong>' : '</strong>');
+                        break;
+                    case 'italic':
+                        $line = ($line[1] == 'on' ? '<i>' : '</i>');
+                        break;
+                    case 'emphasize':
+                        $line = ($line[1] == 'on' ? '<em>' : '</em>');
+                        break;
+                    case 'mark':
+                        $line = ($line[1] == 'on' ? '<mark>' : '</mark>');
+                        break;
+                    case 'small':
+                        $line = ($line[1] == 'on' ? '<small>' : '</small>');
+                        break;
+                    case 'delete':
+                        $line = ($line[1] == 'on' ? '<del>' : '</del>');
+                        break;
+                    case 'insert':
+                        $line = ($line[1] == 'on' ? '<ins>' : '</ins>');
+                        break;
+                    case 'underline':
+                        $line = ($line[1] == 'on' ? '<u>' : '</u>');
+                        break;
+                    case 'sub':
+                        $line = ($line[1] == 'on' ? '<sub>' : '</sub>');
+                        break;
+                    case 'super':
+                        $line = ($line[1] == 'on' ? '<sup>' : '</sup>');
+                        break;
+                    case 'underline':
+                        $line = ($line[1] == 'on' ? '<u>' : '</u>');
+                        break;
+                    case 'underline':
+                        $line = ($line[1] == 'on' ? '<u>' : '</u>');
+                        break;
+                    }
                 }
 
                 $output .= strval($line);
-        
-                // $output .= strval($count) . "=" . strval($line) . "|";
-                // $count += 1;
             }
         }
         return $output;

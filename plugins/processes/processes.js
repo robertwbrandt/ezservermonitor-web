@@ -1,36 +1,35 @@
-esm.processes = function() {
-
+esm.processes = function()
+{
     var module = 'processes';
     
     esm.reloadBlock_spin(module);
 
-    $.get('plugins/'+module+'/'+module+'.php', function(data) {
+    $.get('plugins/'+module+'/'+module+'.json.php', function(data) {
 
         var $box = $('.box#esm-'+module+' .box-content tbody');
         $box.empty();
 
         for (var line in data)
         {
-            var bar_class = '';
-
-            if (data[line].percent_used <= 50)
-                bar_class = 'green';
-            else if (data[line].percent_used <= 75)
-                bar_class = 'orange';
-            else
-                bar_class = 'red';
+            var cpu_class = 'red';
+            if (data[line].cpu <= 50)
+                cpu_class = 'green';
+            else if (data[line].cpu <= 75)
+                cpu_class = 'orange';
+            
+            var mem_class = 'red';
+            if (data[line].mem <= 50)
+                mem_class = 'green';
+            else if (data[line].mem <= 75)
+                mem_class = 'orange';
 
             var html = '';
             html += '<tr>';
-
-            if (typeof data[line].filesystem != 'undefined')
-                html += '<td class="filesystem">'+data[line].filesystem+'</td>';
-
-            html += '<td>'+data[line].mount+'</td>';
-            html += '<td><div class="progressbar-wrap"><div class="progressbar '+bar_class+'" style="width: '+data[line].percent_used+'%;">'+data[line].percent_used+'%</div></div></td>';
-            html += '<td class="t-center">'+data[line].free+'</td>';
-            html += '<td class="t-center">'+data[line].used+'</td>';
-            html += '<td class="t-center">'+data[line].total+'</td>';
+            html += '<td>'+data[line].process;
+            if (data[line].count > 1)
+                html += ' ('+data[line].count+')</td>';
+            html += '<td><div class="progressbar-wrap"><div class="progressbar '+cpu_class+'" style="width: '+data[line].cpu+'%;">'+data[line].cpu+'%</div></div></td>';
+            html += '<td><div class="progressbar-wrap"><div class="progressbar '+mem_class+'" style="width: '+data[line].mem+'%;">'+data[line].mem+'%</div></div></td>';
             html += '</tr>';
 
             $box.append(html);

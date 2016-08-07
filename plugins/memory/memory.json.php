@@ -34,4 +34,4 @@ $datas = array(
     'percent_used'  => $percent_used,
 );
 
-echo json_encode($datas);
+echo json_encode($datas, JSON_PRETTY_PRINT);

@@ -2,7 +2,6 @@
 require '../../autoload.php';
 $Config = new Config();
 
-
 $datas = array();
 
 $available_protocols = array('tcp', 'udp');
@@ -31,5 +30,4 @@ if (count($Config->get('services:list')) > 0)
     }
 }
 
-
-echo json_encode($datas);
+echo json_encode($datas, JSON_PRETTY_PRINT);

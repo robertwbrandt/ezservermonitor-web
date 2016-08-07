@@ -2,6 +2,14 @@
 require '../../autoload.php';
 $Config = new Config();
 
+function multiarray_search($array, $field, $value, $bad_return = False)
+{
+    foreach($array as $key => $data)
+        if ( $data[$field] === $value )
+            return $key;
+   return $bad_return;
+}
+
 $datas = array();
 
 $max = intval($Config->get('processes:max'));
@@ -42,7 +50,7 @@ if (!(exec($command, $ps))) {
         $mem = floatval($mem);
 
         if (in_array($process, $include)) {
-            if ( ($key = Misc::multiarray_search($inc_procs,'process',$process)) !== False) {
+            if ( ($key = multiarray_search($inc_procs,'process',$process)) !== False) {
                 $inc_procs[$key]['cpu'] += $cpu;
                 $inc_procs[$key]['mem'] += $mem;
                 $inc_procs[$key]['count']++;
@@ -50,7 +58,7 @@ if (!(exec($command, $ps))) {
                 $inc_procs[] = array( 'process' => $process, 'cpu' => $cpu, 'mem' => $mem, 'count' => 1 );
             }
         } else {
-            if ( ($key = Misc::multiarray_search($all_procs,'process',$process)) !== False) {
+            if ( ($key = multiarray_search($all_procs,'process',$process)) !== False) {
                 $all_procs[$key]['cpu'] += $cpu;
                 $all_procs[$key]['mem'] += $mem;
                 $all_procs[$key]['count']++;                
