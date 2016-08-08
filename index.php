@@ -79,10 +79,9 @@ $update = $Config->checkUpdate();
         <li><a href="#" class="reload" onclick="esm.reloadBlock('all');"><span class="icon-cycle"></span></a></li>
     </ul>
 </nav>
-<nav>
-Toolbar
-</nav>
-
+<!-- http://www.w3schools.com/howto/howto_js_topnav.asp
+ -->
+ 
 <div id="main-container">
     <?php
         foreach ($Config->get('esm:layout') as $line) {
