@@ -79,6 +79,9 @@ $update = $Config->checkUpdate();
         <li><a href="#" class="reload" onclick="esm.reloadBlock('all');"><span class="icon-cycle"></span></a></li>
     </ul>
 </nav>
+<nav>
+Toolbar
+</nav>
 
 <div id="main-container">
     <?php
