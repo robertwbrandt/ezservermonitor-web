@@ -15,12 +15,13 @@ class Config
             $this->config = $this->_readFile( '/etc/ezservermonitor/esm.config.json' );            
         else
             $this->config = $this->_readFile( __DIR__.'/../conf/esm.config.json' );
-        foreach ($this->get('esm:layout') as $line) {
-            if ($line[1]) foreach ( $line[1] as $plugin) {
-                if (file_exists( __DIR__.'/../plugins/'.$plugin.'/'.$plugin.'.html.php' ))
-                    array_push($this->plugins,$plugin);
-            }
-        }
+
+        // foreach ($this->get('esm:layout') as $line) {
+        //     if ($line[1]) foreach ( $line[1] as $plugin) {
+        //         if (file_exists( __DIR__.'/../plugins/'.$plugin.'/'.$plugin.'.html.php' ))
+        //             array_push($this->plugins,$plugin);
+        //     }
+        // }
     }
 
 
@@ -39,18 +40,11 @@ class Config
 
     private function _get($var, $file = 'config')
     {
-        $tab = $file == 'config' ? $this->config : $this->default;
-        
-        $explode = explode(':', $var);
-        
-        foreach ($explode as $vartmp)
-        {
-            if (isset($tab[$vartmp]))
-                $tab = $tab[$vartmp];
-            else
-                return null;
-        }
-        return $tab == $this->config ? null : $tab;
+        $tab = $file == 'config' ? $this->config : $this->default;   
+        foreach (explode(':', $var) as $vartmp)
+            if (($tab = $tab[$vartmp]) === null)
+                break;
+        return $tab;
     }
 
 
@@ -58,11 +52,29 @@ class Config
      * Returns a specific config variable
      * Ex : get('ping:hosts')
      */
-    public function get($var)
+    public function get($var, $check_plugins = true)
     {
-        $tab = $this->_get($var,'config');
-        if ($tab == null)
-            $tab = $this->_get($var,'default');
+        $explode = explode(':', $var);
+        $check_plugins = ($check_plugins and (!(in_array($explode[0],array('esm','plugins')))));
+
+        if ($check_plugins) {
+            $tab = $this->get($var,false);
+            if ($tab === null) {
+                $plugin = $this->get($explode[0].":plugin",false);
+                if ($plugin == null) {
+                    array_shift($explode);
+                    array_unshift($explode,"plugins",$plugin);
+                    $tab = $this->get(implode(':',$explode),false);
+                }
+            }
+        } else {
+            $tab = $this->_get($var,'config');
+            if ($tab === null)
+                $tab = $this->_get($var,'default');
+        }
+
+        echo 'get("'.$var.'",'.var_export($check_plugins,true).") = ".var_export($tab,true)."\n";
+
         return $tab;
     }
 

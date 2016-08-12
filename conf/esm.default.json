@@ -27,118 +27,170 @@
             ["33-33-33",["last_login","ping","services"]]
         ]        
     },
+
     "system": {
-        "title": "System"
+        "title": "System",
+        "plugin": "system"
     },
     "load_average": {
-        "title": "Load Average"
+        "title": "Load Average",
+        "plugin": "load_average"
     },
     "network": {
-        "title": "Network usage"
+        "title": "Network usage",
+        "plugin": "network"
     },    
     "cpu": {
         "title": "CPU",
-        "enable_temperature": true
+        "plugin": "cpu"
     },
     "disk": {
-        "title": "Disk usage",        
-        "show_tmpfs": false,
-        "show_filesystem": true
+        "title": "Disk usage",
+        "plugin": "disk"
     },
     "memory": {
-        "title": "Memory"
+        "title": "Memory",
+        "plugin": "memory"
     },   
     "swap": {
-        "title": "Swap"
+        "title": "Swap",
+        "plugin": "swap"
     },
     "last_login": {
-        "title": "Last login",        
-        "max": 5
+        "title": "Last login",
+        "plugin": "last_login"
     },
     "ping": {
         "title": "Ping",
-        "hosts": [
-            "facebook.com",
-            "google.com",
-            "yahoo.com"
-        ]
+        "plugin": "ping"
     },
     "services": {
-        "title": "Network services",        
-        "show_port": true,
-        "list": [
-            {
-                "name": "Web Server",
-                "host": "localhost",
-                "port": 80,
-                "protocol": "tcp"
-            },
-            {
-                "name": "Email Server (incoming)",
-                "host": "localhost",
-                "port": 993,
-                "protocol": "tcp"
-            },
-            {
-                "name": "Email Server (outgoing)",
-                "host": "localhost",
-                "port": 587,
-                "protocol": "tcp"
-            },
-            {
-                "name": "FTP Server",
-                "host": "localhost",
-                "port": 21,
-                "protocol": "tcp"
-            },
-            {
-                "name": "Database Server",
-                "host": "localhost",
-                "port": 3306,
-                "protocol": "tcp"
-            },
-            {
-                "name": "SSH",
-                "host": "localhost",
-                "port": 22,
-                "protocol": "tcp"
-            }
-        ]
+        "title": "Network services",
+        "plugin": "services"
     },
     "processes": {
-        "title": "Processes",        
-        "max": 10,
-        "sort": "mem",
-        "include": ["mysql","apache2","nginx"],
-        "exclude": ["init", "games"]
+        "title": "Processes",
+        "plugin": "processes"
     },
     "deamons": {
         "title": "Deamons",
-        "list": [
-            {
-                "name": "Network Time Protocal",
-                "command": "service ntp status"
-            },
-            {
-                "name": "Syslog Server",
-                "command": "service rsyslog status"
-            },
-            {
-                "name": "Email Server",
-                "command": "service postfix status"
-            },
-            {
-                "name": "Print Server",
-                "command": "service cups status"
-            },
-            {
-                "name": "Database Server",
-                "command": "service mysql status"
-            },
-            {
-                "name": "SSH",
-                "command": "service ssh status"
-            }
-        ]
+        "plugin": "deamons"
+    },
+
+    "plugins": {
+        "system": {
+            "title": "System"
+        },
+        "load_average": {
+            "title": "Load Average"
+        },
+        "network": {
+            "title": "Network usage"
+        },    
+        "cpu": {
+            "title": "CPU",
+            "enable_temperature": true
+        },
+        "disk": {
+            "title": "Disk usage",        
+            "show_tmpfs": true,
+            "show_filesystem": true
+        },
+        "memory": {
+            "title": "Memory"
+        },   
+        "swap": {
+            "title": "Swap"
+        },
+        "last_login": {
+            "title": "Last login",        
+            "max": 5
+        },
+        "ping": {
+            "title": "Ping",
+            "hosts": [
+                "facebook.com",
+                "google.com",
+                "yahoo.com"
+            ]
+        },
+        "services": {
+            "title": "Services",        
+            "show_port": true,
+            "list": [
+                {
+                    "name": "Web Server",
+                    "host": "localhost",
+                    "port": 80,
+                    "protocol": "tcp"
+                },
+                {
+                    "name": "Email Server (incoming)",
+                    "host": "localhost",
+                    "port": 993,
+                    "protocol": "tcp"
+                },
+                {
+                    "name": "Email Server (outgoing)",
+                    "host": "localhost",
+                    "port": 587,
+                    "protocol": "tcp"
+                },
+                {
+                    "name": "FTP Server",
+                    "host": "localhost",
+                    "port": 21,
+                    "protocol": "tcp"
+                },
+                {
+                    "name": "Database Server",
+                    "host": "localhost",
+                    "port": 3306,
+                    "protocol": "tcp"
+                },
+                {
+                    "name": "SSH",
+                    "host": "localhost",
+                    "port": 22,
+                    "protocol": "tcp"
+                }
+            ]
+        },
+        "processes": {
+            "title": "Processes",        
+            "max": 10,
+            "sort": "mem",
+            "include": ["mysql","apache2","nginx"],
+            "exclude": ["init", "games"]
+        },
+        "deamons": {
+            "title": "Deamons",
+            "list": [
+                {
+                    "name": "Network Time Protocal",
+                    "command": "service ntp status"
+                },
+                {
+                    "name": "Syslog Server",
+                    "command": "service rsyslog status"
+                },
+                {
+                    "name": "Email Server",
+                    "command": "service postfix status"
+                },
+                {
+                    "name": "Print Server",
+                    "command": "service cups status"
+                },
+                {
+                    "name": "Database Server",
+                    "command": "service mysql status"
+                },
+                {
+                    "name": "SSH",
+                    "command": "service ssh status"
+                }
+            ]
+        }
     }
 }

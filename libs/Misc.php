@@ -20,9 +20,7 @@ class Misc
         }
         
         return round($filesize, $precision).' '.$units[$idUnit].'B';
-    }
-    
-    
+    }    
     /**
      * Returns hostname
      *
