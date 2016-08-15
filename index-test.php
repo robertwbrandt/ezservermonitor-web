@@ -9,12 +9,14 @@ header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
-header('Content-type: text/plain');
+// header('Content-type: text/plain');
 
 $var = "";
 if (isset($_GET['var']))  $var = $_GET['var'];
 if (isset($_POST['var'])) $var = $_POST['var'];
-
+?>
+<script src="js/esm.php" type="text/javascript"></script>
+<?php
 
 // var_export($Config->plugins); echo "\n";
 
@@ -23,5 +25,8 @@ if (isset($_POST['var'])) $var = $_POST['var'];
 $tmp = $Config->get($var);
 echo "\n". $var . " = "; 
 var_export($tmp); echo "\n";
+
+var_export($Config->getPluginNames("cpu")); echo "\n";
+
 ?>
 

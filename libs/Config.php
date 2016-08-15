@@ -13,29 +13,35 @@ class Config
         $this->default = $this->_readFile( __DIR__.'/../conf/esm.default.json' );
 
         if (file_exists('/etc/ezservermonitor/esm.config.json'))
-            $this->config = $this->_readFile( '/etc/ezservermonitor/esm.config.json' );            
+            $this->config = $this->_readFile( '/etc/ezservermonitor/esm.config.json', false );            
         else
-            $this->config = $this->_readFile( __DIR__.'/../conf/esm.config.json' );
+            $this->config = $this->_readFile( __DIR__.'/../conf/esm.config.json', false );
 
         foreach (scandir(__DIR__.'/../plugins/') as $entry)
-            if (!in_array($entry, array(".",".."))){
+            if (!in_array($entry, array(".",".."))) {
                 $plugin_dir = __DIR__.'/../plugins/' . $entry;
                 if (is_dir($plugin_dir) and file_exists($plugin_dir . '/defaults.json'))
                     $this->plugins[$entry] = $this->_readFile( $plugin_dir . '/defaults.json' );
             }
+
+        $this->_verifyConfig();
     }
 
 
-    private function _readFile($file)
+    private function _readFile($file, $checkExist = true)
     {
-        if (!file_exists($file))
-            throw new \Exception('Config file '.basename($file).' not found');
-
-        $content = file_get_contents($file);
-        $temp = json_decode(utf8_encode($content), true);
-        if ($temp === null && json_last_error() !== JSON_ERROR_NONE)
-            throw new \LogicException(sprintf("Failed to parse config file '%s'. Error: '%s'", basename($file) , json_last_error_msg()));
-        return $temp;
+        if (file_exists($file)) {
+            $content = file_get_contents($file);
+            $temp = json_decode(utf8_encode($content), true);
+            if ($temp === null and json_last_error() !== JSON_ERROR_NONE)
+                throw new \LogicException(sprintf("Failed to parse config file '%s'. Error: '%s'", basename($file) , json_last_error_msg()));
+            return $temp;
+        } else
+            if ($checkExist)
+                throw new \Exception('Config file '.$file.' not found');
+            else
+                trigger_error('Config file '.$file.' not found', E_USER_WARNING);                
+        return null;
     }
 
 
@@ -45,7 +51,7 @@ class Config
                      'default' => $this->default, 
                      'plugins' => $this->plugins )[$file];
         foreach (explode(':', $var) as $vartmp)
-            if (($tab = (array_key_exists($vartmp,$tab)) ? $tab[$vartmp] : null) === null)
+            if (($tab === null) or (($tab = (array_key_exists($vartmp,$tab)) ? $tab[$vartmp] : null) === null))
                 break;
         return $tab;
     }
@@ -85,7 +91,7 @@ class Config
      */
     public function getAll()
     {
-        return array_merge($this->default,$this->config);
+        return array_merge($this->default,$this->config,array('plugins' => $this->plugins));
     }
 
 
@@ -97,6 +103,30 @@ class Config
         if (!version_compare(phpversion(), $min, '>='))
             throw new \Exception('Your PHP version is too old ! PHP '.$min.' is required.');
 
+        return true;
+    }
+
+
+    /**
+     * Checks the PHP version compared to the required version
+     */
+    private function _verifyConfig()
+    {
+        if (($layout = $this->get("esm:layout")) === null)
+            throw new \Exception('Unable to determine ESM Layout from configuration files.');
+
+        foreach ($layout as $line)
+            // Thinking about adding a bit to verify that 50/50 has two modules.... but I'll do that later
+            foreach ($line[1] as $module)
+            {
+                if (($plugin = $this->get($module.":plugin")) === null)
+                    throw new \Exception('Unable to determine the plugin for module '.$module);
+                if (($files = $this->get($module.":config")) === null)
+                    throw new \Exception('Unable to determine the plugin configuration for plugin '.$plugin.' used by module '.$module);
+                foreach ($files as $type => $file)
+                    if (($file !== null) and (!file_exists( __DIR__.'/../plugins/'.$plugin.'/'.$file)))
+                        throw new \Exception('Unable to locate the '.$type.' file ('.$file.') for the plugin '.$plugin.' for module '.$module);
+            }
         return true;
     }
 
@@ -280,6 +310,44 @@ class Config
         }
         return $output;
     }
+
+    /**
+     * Retrieve the names of the used.
+     *
+     * @return array             
+     */
+    public function getPluginNames()
+    {
+        $plugins=array();
+        foreach ($this->get("esm:layout") as $line)
+            foreach ($line[1] as $module)
+                if (!in_array($plugin = $this->get($module.":plugin"),$plugins))
+                    $plugins[] = $plugin;
+        sort($plugins);
+        return $plugins;
+    }
+
+
+    /**
+     * List all functions in a plugin
+     *
+     * @plugin string   $plugin     Plugin name
+     * @return array             
+     */
+    public function getPluginFunctions($plugin)
+    {
+        $functions=array();
+        $data = $this->plugins[$plugin];
+        if (array_key_exists('js',$data['config']))
+            if ($data['config']['js'] !== null)
+                foreach (preg_grep('/^\s*esm\..*\s*=\s*function\(/', file(__DIR__.'/../plugins/'.$plugin.'/'.$data['config']['js'])) as $line)
+                    if (!in_array(($function = trim(explode("=",$line)[0])),$functions))
+                        $functions[] = $function;
+        return $functions;
+    }
+
+
+
 }
 
 

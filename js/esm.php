@@ -6,9 +6,9 @@ var esm = {};
 <?php
 require '../autoload.php';
 $Config = new Config();
-foreach ($Config->plugins as $plugin) {
-	$filename = __DIR__.'/../plugins/'.$plugin.'/'.$plugin.'.js';
-	if (file_exists( $filename )) require $filename;
+foreach ($Config->getPluginNames() as $plugin) {
+    if (($filename = $Config->plugins[$plugin]['config']['js']) !== null)
+        require __DIR__.'/../plugins/'.$plugin.'/'.$filename;
 	echo "\n\n";
 }
 ?>
@@ -62,20 +62,16 @@ esm.reconfigureGauge = function($gauge, newValue) {
 
 <?php
 echo "esm.all = function() {\n";
-foreach ($Config->plugins as $plugin) {
-	$filename = __DIR__.'/../plugins/'.$plugin.'/'.$plugin.'.js';
-	if (file_exists( $filename )) echo "\tesm.".$plugin."();\n";
-}
+foreach ($Config->getPluginNames() as $plugin)
+    foreach ($Config->getPluginFunctions($plugin) as $function)
+        echo "\t".$function."();\n";
 echo "}\n";
 ?>
 
-
 <?php
-echo "esm.mapping = {\n";
-echo "\tall: esm.all";
-foreach ($Config->plugins as $plugin) {
-	$filename = __DIR__.'/../plugins/'.$plugin.'/'.$plugin.'.js';
-	if (file_exists( $filename )) echo ",\n\t".$plugin.": esm.".$plugin;
-}
+echo "esm.mapping = {\n\tall: esm.all";
+foreach ($Config->getPluginNames() as $plugin)
+    foreach ($Config->getPluginFunctions($plugin) as $function)
+        echo ",\n\t".$plugin.": ".$function;
 echo "\n}\n";
 ?>
