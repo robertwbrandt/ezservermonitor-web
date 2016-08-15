@@ -1,0 +1,9 @@
+{
+	"config": {
+        "js":   "network.js",       
+        "css":  null,
+        "html": "network.html.php",
+        "json": "network.json.php"
+    },
+    "title": "Network usage"
+}

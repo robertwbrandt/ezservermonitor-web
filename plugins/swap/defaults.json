@@ -1,0 +1,9 @@
+{
+    "config": {
+        "js":   "swap.js",       
+        "css":  null,
+        "html": "swap.html.php",
+        "json": "swap.json.php"
+    },
+    "title": "Swap"
+}

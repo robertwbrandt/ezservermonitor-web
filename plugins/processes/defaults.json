@@ -1,0 +1,13 @@
+{
+	"config": {
+        "js":   "processes.js",
+        "css":  "processes.css",
+        "html": "processes.html.php",
+        "json": "processes.json.php"
+    },
+    "title": "Processes",        
+    "max": 10,
+    "sort": "cpu",
+    "include": ["mysql","apache2","nginx"],
+    "exclude": ["init", "games"]
+}

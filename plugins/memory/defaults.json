@@ -1,0 +1,9 @@
+{
+	"config": {
+        "js":   "memory.js",       
+        "css":  null,
+        "html": "memory.html.php",
+        "json": "memory.json.php"
+    },
+    "title": "Memory"
+}

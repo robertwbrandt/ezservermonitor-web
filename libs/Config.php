@@ -2,26 +2,27 @@
 
 class Config
 {
+    public $config  = null;
     public $default = null;
-    public $config = null;
-    public $plugins = array();
+    public $plugins = null;
 
 
     public function __construct()
     {
         $this->_checkPHPVersion(5.3);
         $this->default = $this->_readFile( __DIR__.'/../conf/esm.default.json' );
+
         if (file_exists('/etc/ezservermonitor/esm.config.json'))
             $this->config = $this->_readFile( '/etc/ezservermonitor/esm.config.json' );            
         else
             $this->config = $this->_readFile( __DIR__.'/../conf/esm.config.json' );
 
-        // foreach ($this->get('esm:layout') as $line) {
-        //     if ($line[1]) foreach ( $line[1] as $plugin) {
-        //         if (file_exists( __DIR__.'/../plugins/'.$plugin.'/'.$plugin.'.html.php' ))
-        //             array_push($this->plugins,$plugin);
-        //     }
-        // }
+        foreach (scandir(__DIR__.'/../plugins/') as $entry)
+            if (!in_array($entry, array(".",".."))){
+                $plugin_dir = __DIR__.'/../plugins/' . $entry;
+                if (is_dir($plugin_dir) and file_exists($plugin_dir . '/defaults.json'))
+                    $this->plugins[$entry] = $this->_readFile( $plugin_dir . '/defaults.json' );
+            }
     }
 
 
@@ -32,7 +33,7 @@ class Config
 
         $content = file_get_contents($file);
         $temp = json_decode(utf8_encode($content), true);
-        if ($temp == null && json_last_error() != JSON_ERROR_NONE)
+        if ($temp === null && json_last_error() !== JSON_ERROR_NONE)
             throw new \LogicException(sprintf("Failed to parse config file '%s'. Error: '%s'", basename($file) , json_last_error_msg()));
         return $temp;
     }
@@ -40,9 +41,11 @@ class Config
 
     private function _get($var, $file = 'config')
     {
-        $tab = $file == 'config' ? $this->config : $this->default;   
+        $tab = array('config'  => $this->config, 
+                     'default' => $this->default, 
+                     'plugins' => $this->plugins )[$file];
         foreach (explode(':', $var) as $vartmp)
-            if (($tab = $tab[$vartmp]) === null)
+            if (($tab = (array_key_exists($vartmp,$tab)) ? $tab[$vartmp] : null) === null)
                 break;
         return $tab;
     }
@@ -56,24 +59,22 @@ class Config
     {
         $explode = explode(':', $var);
         $check_plugins = ($check_plugins and (!(in_array($explode[0],array('esm','plugins')))));
+        $tab = null;
 
         if ($check_plugins) {
-            $tab = $this->get($var,false);
-            if ($tab === null) {
-                $plugin = $this->get($explode[0].":plugin",false);
-                if ($plugin == null) {
+            if (($tab = $this->get($var,false)) === null) {
+                if (($plugin = $this->get($explode[0].":plugin",false)) !== null) {
                     array_shift($explode);
-                    array_unshift($explode,"plugins",$plugin);
-                    $tab = $this->get(implode(':',$explode),false);
+                    array_unshift($explode,$plugin);
+                    $tab = $this->_get(implode(':',$explode),'plugins');                    
                 }
             }
         } else {
-            $tab = $this->_get($var,'config');
-            if ($tab === null)
+            if (($tab = $this->_get($var,'config')) === null)
                 $tab = $this->_get($var,'default');
         }
 
-        echo 'get("'.$var.'",'.var_export($check_plugins,true).") = ".var_export($tab,true)."\n";
+        // echo 'get("'.$var.'",'.var_export($check_plugins,true).") = ".var_export($tab,true)."\n";
 
         return $tab;
     }

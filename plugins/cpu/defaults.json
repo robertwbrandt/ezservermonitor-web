@@ -1,0 +1,10 @@
+{
+	"config": {
+		"js": 	"cpu.js",		
+		"css":  null,
+		"html": "cpu.html.php",
+		"json": "cpu.json.php"
+	},
+    "title": "CPU",
+    "enable_temperature": true
+}

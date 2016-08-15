@@ -15,7 +15,13 @@ $var = "";
 if (isset($_GET['var']))  $var = $_GET['var'];
 if (isset($_POST['var'])) $var = $_POST['var'];
 
-echo "Find " . $var . "\n"; 
-var_export($Config->get($var));
+
+// var_export($Config->plugins); echo "\n";
+
+
+
+$tmp = $Config->get($var);
+echo "\n". $var . " = "; 
+var_export($tmp); echo "\n";
 ?>
 

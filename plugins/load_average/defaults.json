@@ -1,0 +1,9 @@
+{
+    "config": {
+        "js":   "load_average.js",       
+        "css":  null,
+        "html": "load_average.html.php",
+        "json": "load_average.json.php"
+    },
+    "title": "Load Average"
+}

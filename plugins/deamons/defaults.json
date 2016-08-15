@@ -1,0 +1,35 @@
+{
+    "config": {
+        "js":   "deamons.js",       
+        "css":  null,
+        "html": "deamons.html.php",
+        "json": "deamons.json.php"
+    },
+    "title": "Deamons",
+    "list": [
+        {
+            "name": "Network Time Protocal",
+            "command": "service ntp status"
+        },
+        {
+            "name": "Syslog Server",
+            "command": "service rsyslog status"
+        },
+        {
+            "name": "Email Server",
+            "command": "service postfix status"
+        },
+        {
+            "name": "Print Server",
+            "command": "service cups status"
+        },
+        {
+            "name": "Database Server",
+            "command": "service mysql status"
+        },
+        {
+            "name": "SSH",
+            "command": "service ssh status"
+        }
+    ]
+}

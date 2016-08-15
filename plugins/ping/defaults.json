@@ -1,0 +1,14 @@
+{
+	"config": {
+        "js":   "ping.js",       
+        "css":  null,
+        "html": "ping.html.php",
+        "json": "ping.json.php"
+    },
+    "title": "Ping",
+    "hosts": [
+        "facebook.com",
+        "google.com",
+        "yahoo.com"
+    ]
+}

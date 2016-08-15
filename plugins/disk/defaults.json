@@ -1,0 +1,11 @@
+{
+    "config": {
+        "js":   "disk.js",       
+        "css":  "disk.css",
+        "html": "disk.html.php",
+        "json": "disk.json.php"
+    },
+    "title": "Plugin usage",
+    "show_tmpfs": true,
+    "show_filesystem": true
+}

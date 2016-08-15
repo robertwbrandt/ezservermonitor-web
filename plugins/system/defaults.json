@@ -1,0 +1,9 @@
+{
+    "config": {
+        "js":   "system.js",       
+        "css":  null,
+        "html": "system.html.php",
+        "json": "system.json.php"
+    },
+    "title": "System"
+}

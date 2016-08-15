@@ -1,0 +1,10 @@
+{
+    "config": {
+        "js":   "last_login.js",       
+        "css":  null,
+        "html": "last_login.html.php",
+        "json": "last_login.json.php"
+    },
+    "title": "Last login",
+    "max": 5
+}
