@@ -1,6 +1,6 @@
 <?php
 require '../../autoload.php';
-$Config = new Config();
+// $Config = new Config();
 
 $tmp = Misc::getCPUData();
 

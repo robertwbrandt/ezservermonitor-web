@@ -332,5 +332,25 @@ class Misc
         else
             return $cpu_data[$parameter];
     }
+    /**
+     * Return Get/Post/Config/Default value for a parameter
+     *
+     * @param   string  $post       GET/POST variable name
+     * @param   string  $config     Config value
+     * @param   multi   $default    Default value
+     * @return  multi               Return data
+     */
+    public static function getPostConfigDefault($post, $config, $default)
+    {
+        $data = null;
+        if (isset($_GET[$post]))  $data = $_GET[$post];
+        if (isset($_POST[$post])) $data = $_POST[$post];
+        if ($data === null) {
+            global $Config;
+            $data = $Config->get($config);
+        }
+        if ($data === null)       $data = $default;
 
+        return $data;
+    }
 }
