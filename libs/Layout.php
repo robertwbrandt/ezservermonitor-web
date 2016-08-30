@@ -5,24 +5,25 @@ class Layout
     /**
      * Writes a single div across the entire page
      *
-     * @param  string  $plugin  Name of plugin
+     * @param  string  $module  Name of module
      * @return none
      */
-	private static function singleBox($plugin, $class="box", $style="")
+	private static function singleBox($module, $class="box", $style="")
 	{
+		global $Config;
 		$class = 'class="'.$class.'"';
 		if ($style) $class .= ' style="'.$style.'"';
-
-		$filename = './plugins/'.$plugin.'/'.$plugin.'.html.php';
+		$plugin = $Config->get($module.":plugin");
+		$htmlfile = $Config->get($module.":config:html");
+		$filename = './plugins/'.$plugin.'/'.$htmlfile;
 		if (file_exists($filename)) {
-			global $Config;
-			$title = $Config->format($plugin.":title");
-			$reload = 'onclick="esm.reloadBlock(\''.$plugin.'\');"';
+			$title = $Config->format($module.":title");
+			$reload = 'onclick="esm.reloadBlock(\''.$module.'\');"';
 		} else {
 			$title = 'Error';
 			$reload = '';
 		}
-		echo '<div '.$class.' id="esm-'.$plugin.'">'."\n";
+		echo '<div '.$class.' id="esm-'.$module.'">'."\n";
 		echo "\t".'<div class="box-header">'."\n";
   		echo "\t\t".'<h1>'.$title.'</h1>'."\n";
 		echo "\t\t".'<ul>'."\n";
@@ -33,7 +34,7 @@ class Layout
 		if (file_exists($filename)) {
 			require $filename;
 		} else {
-			echo 'Error: The plugin ('.$plugin.') does not appear to exist in the plugin directory!';
+			echo 'Error: The module ('.$module.') is not configured correctly!';
 		}
 		echo '</div>'."\n";
 	}
@@ -42,13 +43,13 @@ class Layout
     /**
      * Writes a single div across the entire page
      *
-     * @param  string  $plugin  Name of plugin
+     * @param  string  $module  Name of module
      * @return none
      */
-	public static function colSingle($plugin)
+	public static function colSingle($module)
 	{
         echo '<div class="t-center">'."\n";
-        Layout::singleBox($plugin, "box");
+        Layout::singleBox($module, "box");
 		echo '</div>'."\n";
 	}
 
